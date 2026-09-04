@@ -9,8 +9,11 @@ import { useWishlist } from '../context/WishlistContext';
 export const ProductDetailPage = ({ product, onBack, onOpenIntentModal, onOpenCheckout }) => {
   const { addToCart, waitlistItems, boardItems, removeFromWaitlist, removeFromBoard } = useWishlist();
 
-  const [selectedSize, setSelectedSize] = useState(product.availableSizes[0]);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const sizes = product.availableSizes || product.sizes || ['S', 'M', 'L', 'XL'];
+  const colors = product.colors || ['Blue', 'White', 'Black'];
+
+  const [selectedSize, setSelectedSize] = useState(sizes[0]);
+  const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [pincode, setPincode] = useState('');
   const [pincodeStatus, setPincodeStatus] = useState(null); // null, 'success', 'error'
   const [activeTab, setActiveTab] = useState('specs');
@@ -98,329 +101,275 @@ export const ProductDetailPage = ({ product, onBack, onOpenIntentModal, onOpenCh
           </div>
 
           {/* Product Specifications & Details Tabs */}
-          <div className="mt-8 border border-gray-200 rounded-sm p-6 space-y-6 bg-white">
-            
-            {/* Specs Header Tabs */}
-            <div className="flex border-b border-gray-200">
+          <div className="border border-gray-200 rounded-md p-6 bg-white mt-6">
+            <div className="flex border-b border-gray-200 mb-4 gap-6 text-sm font-bold">
               <button
                 onClick={() => setActiveTab('specs')}
-                className={`pb-3 px-4 font-extrabold text-sm uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
-                  activeTab === 'specs' ? 'border-[#ff3f6c] text-[#ff3f6c]' : 'border-transparent text-gray-500 hover:text-[#282c3f]'
+                className={`pb-2 border-b-2 transition-all cursor-pointer ${
+                  activeTab === 'specs' ? 'border-[#ff3f6c] text-[#ff3f6c]' : 'border-transparent text-gray-500'
                 }`}
               >
                 Specifications
               </button>
               <button
                 onClick={() => setActiveTab('details')}
-                className={`pb-3 px-4 font-extrabold text-sm uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
-                  activeTab === 'details' ? 'border-[#ff3f6c] text-[#ff3f6c]' : 'border-transparent text-gray-500 hover:text-[#282c3f]'
+                className={`pb-2 border-b-2 transition-all cursor-pointer ${
+                  activeTab === 'details' ? 'border-[#ff3f6c] text-[#ff3f6c]' : 'border-transparent text-gray-500'
                 }`}
               >
                 Product Details
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
-                className={`pb-3 px-4 font-extrabold text-sm uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
-                  activeTab === 'reviews' ? 'border-[#ff3f6c] text-[#ff3f6c]' : 'border-transparent text-gray-500 hover:text-[#282c3f]'
+                className={`pb-2 border-b-2 transition-all cursor-pointer ${
+                  activeTab === 'reviews' ? 'border-[#ff3f6c] text-[#ff3f6c]' : 'border-transparent text-gray-500'
                 }`}
               >
                 Ratings & Reviews ({product.ratingCount})
               </button>
             </div>
 
-            {/* Specs Tab Content */}
             {activeTab === 'specs' && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-6 text-sm">
+              <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-xs">
                 <div>
-                  <span className="text-gray-400 block text-sm">Fabric</span>
+                  <span className="text-gray-400 block mb-0.5">Fabric</span>
                   <span className="font-bold text-[#282c3f]">100% Pure Cotton</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block text-sm">Fit</span>
-                  <span className="font-bold text-[#282c3f]">Regular Fit</span>
+                  <span className="text-gray-400 block mb-0.5">Fit</span>
+                  <span className="font-bold text-[#282c3f]">Slim / Regular Tailored</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block text-sm">Pattern</span>
-                  <span className="font-bold text-[#282c3f]">Solid / Tipped Collar</span>
+                  <span className="text-gray-400 block mb-0.5">Length</span>
+                  <span className="font-bold text-[#282c3f]">Regular Length</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block text-sm">Sleeve Length</span>
-                  <span className="font-bold text-[#282c3f]">Short Sleeves</span>
+                  <span className="text-gray-400 block mb-0.5">Main Trend</span>
+                  <span className="font-bold text-[#282c3f]">New Casual Basics</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block text-sm">Collar</span>
-                  <span className="font-bold text-[#282c3f]">Polo Collar</span>
+                  <span className="text-gray-400 block mb-0.5">Multipack Set</span>
+                  <span className="font-bold text-[#282c3f]">Single Shirt</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block text-sm">Wash Care</span>
+                  <span className="text-gray-400 block mb-0.5">Wash Care</span>
                   <span className="font-bold text-[#282c3f]">Machine Wash Cold</span>
                 </div>
               </div>
             )}
 
-            {/* Details Tab Content */}
             {activeTab === 'details' && (
-              <div className="text-sm text-gray-600 space-y-2 leading-relaxed">
-                <p>
-                  Elevate your everyday casual wardrobe with this premium polo t-shirt from <span className="font-bold text-[#282c3f]">{product.brand}</span>. Crafted from breathable, long-staple combed cotton fabric for all-day comfort and durability.
-                </p>
-                <ul className="list-disc pl-4 space-y-1 pt-1 text-gray-700">
-                  <li>Features rib-knit collar and sleeve cuffs with contrasting tip detail.</li>
-                  <li>Classic two-button placket with reinforced stitching.</li>
-                  <li>Side slits for extra mobility and flexible styling.</li>
-                </ul>
+              <div className="text-xs text-gray-600 space-y-2 leading-relaxed">
+                <p>{product.description}</p>
+                <p>Designed with modern comfort in mind, featuring precision stitching and high color retention after multiple washes.</p>
               </div>
             )}
 
-            {/* Reviews Tab Content */}
             {activeTab === 'reviews' && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-6 p-4 bg-gray-50 rounded">
-                  <div className="text-center">
+              <div className="space-y-4 text-xs">
+                <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-md">
+                  <div className="text-center border-r border-gray-200 pr-6">
                     <div className="text-3xl font-black text-[#282c3f]">{product.rating} ★</div>
-                    <div className="text-sm text-gray-400 font-bold">{product.ratingCount} Verified Buyers</div>
+                    <div className="text-gray-400 text-[11px] mt-1">{product.ratingCount} Verified Buyers</div>
                   </div>
-                  <div className="flex-1 space-y-1 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span>5 ★</span>
-                      <div className="flex-1 h-1.5 bg-gray-200 rounded overflow-hidden">
-                        <div className="w-[70%] h-full bg-teal-600" />
-                      </div>
-                      <span className="text-gray-400">70%</span>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <span>Customer Fit:</span>
+                      <span className="font-bold text-emerald-600">92% Rated True to Size</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span>4 ★</span>
-                      <div className="flex-1 h-1.5 bg-gray-200 rounded overflow-hidden">
-                        <div className="w-[20%] h-full bg-teal-600" />
-                      </div>
-                      <span className="text-gray-400">20%</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Customer Reviews Snippet */}
-                <div className="space-y-3 pt-2">
-                  <div className="p-3 border-b border-gray-100 text-sm">
-                    <div className="flex items-center gap-2 font-bold text-[#282c3f]">
-                      <span className="bg-teal-600 text-white text-xs px-1.5 py-0.2 rounded font-extrabold">4 ★</span>
-                      <span>Great fabric and fit!</span>
-                    </div>
-                    <p className="text-gray-600 text-sm mt-1">The cotton quality is super soft and the collar shape holds nicely after wash.</p>
-                    <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                      <UserCheck className="w-3 h-3 text-teal-600" /> Rahul M. | Verified Purchase
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <span>Quality Rating:</span>
+                      <span className="font-bold text-emerald-600">4.8 / 5 Fabric Feel</span>
                     </div>
                   </div>
                 </div>
               </div>
             )}
-
           </div>
-
         </div>
 
-        {/* RIGHT COLUMN: Interactive Purchase & Intent Panel */}
-        <div className="lg:col-span-5 space-y-6">
+        {/* RIGHT COLUMN: Product Buying & Intent Options */}
+        <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-24">
           
-          {/* Brand & Title */}
+          {/* Header & Title */}
           <div>
-            <h1 className="font-extrabold text-2xl text-[#282c3f] uppercase tracking-wide">
+            <h1 className="text-xl sm:text-2xl font-black text-[#282c3f] uppercase tracking-wide">
               {product.brand}
             </h1>
-            <p className="text-lg text-[#535766] mt-1 font-normal">
+            <p className="text-sm text-gray-500 font-medium mt-1">
               {product.title}
             </p>
 
-            {/* Rating Badge Pill matching Official PDP */}
-            <div className="mt-3 inline-flex items-center gap-1.5 border border-gray-300 rounded px-2.5 py-1 text-sm font-bold text-[#282c3f]">
-              <span>{product.rating}</span>
-              <Star className="w-3.5 h-3.5 fill-teal-600 text-teal-600" />
-              <span className="text-gray-400 font-normal">| {product.ratingCount} Ratings</span>
+            {/* Rating Pill Banner */}
+            <div className="inline-flex items-center gap-2 border border-gray-200 rounded px-2.5 py-1 mt-3 text-xs font-bold text-[#282c3f]">
+              <span className="flex items-center gap-1">
+                {product.rating} <Star className="w-3.5 h-3.5 fill-teal-600 text-teal-600" />
+              </span>
+              <span className="text-gray-300">|</span>
+              <span className="text-gray-500 font-medium">{product.ratingCount} Ratings</span>
             </div>
           </div>
 
-          <hr className="border-gray-200" />
+          <div className="border-b border-gray-200 my-4" />
 
-          {/* Pricing Row */}
+          {/* Pricing Section */}
           <div>
             <div className="flex items-baseline gap-3">
-              <span className="text-2xl font-extrabold text-[#282c3f]">
-                ₹{product.price}
-              </span>
-              <span className="text-lg text-gray-400 line-through font-normal">
-                MRP ₹{product.originalPrice}
-              </span>
-              <span className="text-lg font-extrabold text-[#ff905a]">
-                ({product.discountPercent}% OFF)
-              </span>
+              <span className="text-2xl font-black text-[#282c3f]">Rs. {product.price}</span>
+              <span className="text-base text-gray-400 line-through">MRP Rs. {product.originalPrice}</span>
+              <span className="text-base font-extrabold text-[#ff905a]">({product.discountPercent}% OFF)</span>
             </div>
-            <div className="text-sm font-bold text-[#03a685] mt-1">
+            <div className="text-[11px] font-bold text-emerald-600 mt-1">
               inclusive of all taxes
             </div>
           </div>
 
-          {/* Best Offers Banner */}
-          <div className="p-4 bg-orange-50/60 border border-orange-200 rounded-sm space-y-2 text-sm">
-            <div className="flex items-center gap-1.5 font-extrabold text-[#282c3f] uppercase">
-              <Tag className="w-4 h-4 text-[#ff905a]" /> Best Offer Price
+          {/* Offer Box */}
+          <div className="bg-emerald-50 border border-emerald-200 rounded-md p-3 text-xs space-y-1.5">
+            <div className="font-bold text-emerald-800 flex items-center gap-1.5">
+              <Tag className="w-4 h-4 text-emerald-600" /> Best Offer: Extra Rs. 100 OFF
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-lg font-black text-[#ff3f6c]">₹{Math.round(product.price * 0.9)}</span>
-              <span className="text-sm text-gray-600">with Code <span className="font-mono font-bold bg-white px-1.5 py-0.5 border border-orange-300 rounded">MYNTRA100</span></span>
-            </div>
-            <ul className="text-sm text-gray-600 space-y-1 pt-1">
-              <li className="flex items-center gap-1.5">
-                <Check className="w-3 h-3 text-[#03a685]" /> 10% Instant Discount on HDFC Bank Credit Cards.
-              </li>
-              <li className="flex items-center gap-1.5">
-                <Check className="w-3 h-3 text-[#03a685]" /> 15% Cashback up to ₹150 on Paytm UPI transactions.
-              </li>
-            </ul>
+            <p className="text-emerald-700 font-medium text-[11px]">
+              Use Coupon Code <span className="font-bold text-emerald-900">MYNTRA100</span> on orders above Rs. 999.
+            </p>
           </div>
 
-          {/* Color Variant Selector */}
+          {/* Size Selector */}
           <div>
-            <h4 className="font-extrabold text-sm uppercase tracking-wider text-[#282c3f] mb-2.5">
-              More Colors
-            </h4>
-            <div className="flex gap-2">
-              {product.colors.map((color) => (
-                <div
-                  key={color}
-                  onClick={() => setSelectedColor(color)}
-                  className={`w-14 h-16 rounded border-2 overflow-hidden cursor-pointer transition-all ${
-                    selectedColor === color ? 'border-[#ff3f6c] shadow-sm' : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <img src={product.image} alt={color} className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Size Selector with Urgency Indicator */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-extrabold text-sm uppercase tracking-wider text-[#282c3f]">
-                Select Size
-              </h4>
-              <button className="text-sm font-bold text-[#ff3f6c] uppercase hover:underline cursor-pointer">
-                Size Chart &gt;
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-[#282c3f]">
+                SELECT SIZE
+              </span>
+              <button className="text-xs font-bold text-[#ff3f6c] hover:underline cursor-pointer">
+                SIZE CHART &gt;
               </button>
             </div>
 
-            <div className="flex gap-3">
-              {product.availableSizes.map(size => (
+            <div className="flex flex-wrap gap-3">
+              {sizes.map(size => {
+                const isSelected = selectedSize === size;
+                const isLowStock = product.lowStockSize === size;
+
+                return (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`w-12 h-12 rounded-full border text-xs font-bold transition-all relative flex flex-col items-center justify-center cursor-pointer ${
+                      isSelected
+                        ? 'border-[#ff3f6c] text-[#ff3f6c] ring-2 ring-[#ff3f6c]/30 font-black'
+                        : 'border-gray-300 text-[#282c3f] hover:border-gray-400'
+                    }`}
+                  >
+                    <span>{size}</span>
+                    {isLowStock && (
+                      <span className="text-[8px] text-rose-600 font-extrabold -mt-0.5">
+                        {product.stockCount} left
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {product.lowStockSize === selectedSize && (
+              <div className="mt-2 text-xs font-bold text-rose-600 flex items-center gap-1">
+                ⚡ Hurry! Only {product.stockCount} units left in size {selectedSize}!
+              </div>
+            )}
+          </div>
+
+          {/* Color Selector */}
+          <div>
+            <span className="text-xs font-extrabold uppercase tracking-wider text-[#282c3f] block mb-2">
+              SELECT COLOR
+            </span>
+            <div className="flex items-center gap-2">
+              {colors.map(color => (
                 <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={`w-12 h-12 rounded-full border text-sm font-bold flex items-center justify-center transition-all cursor-pointer ${
-                    selectedSize === size
-                      ? 'border-[#ff3f6c] text-[#ff3f6c] bg-pink-50 shadow-xs'
-                      : 'border-gray-300 text-[#282c3f] hover:border-gray-400'
+                  key={color}
+                  onClick={() => setSelectedColor(color)}
+                  className={`px-3 py-1 text-xs font-bold rounded-md border transition-all cursor-pointer ${
+                    selectedColor === color
+                      ? 'bg-[#282c3f] text-white border-[#282c3f]'
+                      : 'bg-white text-gray-700 border-gray-300'
                   }`}
                 >
-                  {size}
+                  {color}
                 </button>
               ))}
             </div>
-            
-            <div className="mt-2 text-sm font-bold text-[#ff905a] flex items-center gap-1">
-              <span>⚡ Fast-selling size: Only {product.stockCount || 5} units left in {selectedSize}!</span>
-            </div>
           </div>
 
-          {/* Primary Action Buttons: ADD TO BAG & WISHLIST */}
-          <div className="flex items-center gap-4 pt-2">
-            
-            {/* ADD TO BAG */}
+          {/* CTA Action Buttons: Add to Bag vs Intent Wishlist */}
+          <div className="flex gap-4 pt-3">
             <button
               onClick={handleAddToBag}
-              className="flex-1 py-4 bg-[#ff3f6c] hover:bg-[#e6335c] text-white font-extrabold text-base uppercase tracking-wider rounded flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+              className="flex-1 py-3.5 bg-[#ff3f6c] hover:bg-[#e6335c] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider rounded-md shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <ShoppingBag className="w-4 h-4 fill-white" />
-              <span>Add to Bag</span>
+              <ShoppingBag className="w-5 h-5 fill-white" />
+              <span>ADD TO BAG</span>
             </button>
 
-            {/* WISHLIST (Triggers Two-Tier Intent Save Architecture) */}
             <button
               onClick={handleWishlistButtonClick}
-              className={`flex-1 py-4 font-extrabold text-base uppercase tracking-wider rounded border flex items-center justify-center gap-2 transition-all cursor-pointer ${
+              className={`flex-1 py-3.5 border-2 font-extrabold text-xs sm:text-sm uppercase tracking-wider rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer ${
                 isWaitlisted
-                  ? 'bg-[#ff3f6c] text-white border-[#ff3f6c]'
+                  ? 'bg-rose-50 border-[#ff3f6c] text-[#ff3f6c]'
                   : isBoardSaved
-                  ? 'bg-purple-700 text-white border-purple-700'
-                  : 'bg-white border-gray-300 text-[#282c3f] hover:border-gray-400'
+                  ? 'bg-purple-50 border-purple-600 text-purple-700'
+                  : 'bg-white border-gray-300 text-[#282c3f] hover:border-[#ff3f6c] hover:text-[#ff3f6c]'
               }`}
             >
-              <Heart className={`w-4 h-4 ${isWaitlisted || isBoardSaved ? 'fill-current' : ''}`} />
+              <Heart className={`w-5 h-5 ${isWaitlisted || isBoardSaved ? 'fill-current' : ''}`} />
               <span>
-                {isWaitlisted ? `Waitlist Active (${selectedSize})` : isBoardSaved ? 'Saved to Board' : 'Wishlist'}
+                {isWaitlisted ? 'WISHLISTED' : isBoardSaved ? 'IN BOARD' : 'WISHLIST'}
               </span>
             </button>
-
           </div>
 
-          {/* Delivery & Pincode Options Section */}
-          <div className="pt-4 border-t border-gray-200 space-y-3">
-            <div className="flex items-center gap-2 font-extrabold text-sm uppercase tracking-wider text-[#282c3f]">
-              <Truck className="w-4 h-4 text-[#ff3f6c]" /> Delivery Options
+          {/* Pincode & Delivery Checker */}
+          <div className="border border-gray-200 rounded-md p-4 bg-gray-50 space-y-3">
+            <div className="flex items-center gap-2 text-xs font-extrabold text-[#282c3f] uppercase tracking-wider">
+              <Truck className="w-4 h-4 text-teal-600" /> Delivery Options
             </div>
 
-            <div className="flex items-center border border-gray-300 rounded overflow-hidden max-w-xs">
+            <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="Enter pincode"
                 value={pincode}
                 onChange={(e) => setPincode(e.target.value)}
-                className="px-3 py-2 text-sm text-[#282c3f] flex-1 focus:outline-none"
+                placeholder="Enter Pincode (e.g. 560001)"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-[#ff3f6c]"
+                maxLength={6}
               />
               <button
                 onClick={handleCheckPincode}
-                className="px-4 py-2 text-sm font-bold text-[#ff3f6c] hover:bg-gray-50 uppercase border-l border-gray-200 cursor-pointer"
+                className="px-4 py-2 bg-[#282c3f] text-white text-xs font-bold rounded cursor-pointer hover:bg-gray-800"
               >
-                Check
+                CHECK
               </button>
             </div>
 
             {pincodeStatus === 'success' && (
-              <div className="text-sm text-[#03a685] font-bold space-y-1">
-                <div className="flex items-center gap-1">
-                  <Check className="w-3.5 h-3.5" /> Delivery available to {pincode}
-                </div>
-                <div className="text-gray-600 font-normal">Get it by <span className="font-bold text-[#282c3f]">Tomorrow, 4:00 PM</span></div>
+              <div className="text-xs text-emerald-600 font-bold flex items-center gap-1">
+                <Check className="w-4 h-4" /> Express Delivery available by Tomorrow, 4 PM!
               </div>
             )}
-
             {pincodeStatus === 'error' && (
-              <div className="text-sm text-rose-600 font-bold">
-                Please enter a valid 6-digit pincode.
+              <div className="text-xs text-rose-600 font-bold">
+                Please enter a valid 6-digit Pincode.
               </div>
             )}
-          </div>
 
-          {/* Guarantees & Policy List */}
-          <div className="pt-4 border-t border-gray-200 space-y-2.5 text-sm text-gray-700">
-            <div className="flex items-center gap-3">
-              <ShieldCheck className="w-5 h-5 text-[#03a685]" />
-              <div>
-                <span className="font-bold text-[#282c3f] block">100% Original Products</span>
-                <span className="text-sm text-gray-500">Sourced directly from official brand distributors</span>
+            <div className="space-y-1.5 text-xs text-gray-600 pt-1">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" /> 100% Original Products Guaranteed
               </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <RefreshCw className="w-5 h-5 text-purple-600" />
-              <div>
-                <span className="font-bold text-[#282c3f] block">Easy 14 Days Returns & Exchanges</span>
-                <span className="text-sm text-gray-500">Hassle-free doorstep pickup</span>
+              <div className="flex items-center gap-2">
+                <RefreshCw className="w-4 h-4 text-emerald-600" /> Pay on delivery available
               </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <CreditCard className="w-5 h-5 text-blue-600" />
-              <div>
-                <span className="font-bold text-[#282c3f] block">Pay on Delivery Available</span>
-                <span className="text-sm text-gray-500">Cash, UPI, or Card on delivery</span>
+              <div className="flex items-center gap-2">
+                <CreditCard className="w-4 h-4 text-emerald-600" /> Easy 14 days returns & exchanges
               </div>
             </div>
           </div>
